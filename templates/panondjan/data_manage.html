@@ -1,0 +1,129 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="row  align-items-start mt-5">
+    <div class="col-lg-5 col-12">
+        <h1 class="h1 border-bottom pb-1 mb-4">Data transform</h1>
+        <form class="my-2" method="post" enctype="multipart/form-data">{% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" class="btn btn-secondary" value="transform">
+        </form> 
+    </div>
+    
+    <div class="col-lg-7 col-12">
+        <h4 class="pb-1">input data</h4>
+        <p class="mb-4" >
+            変換前のインプットデータです、
+            <a href="{% static 'data/input.csv' %}" download="input.csv">ダウンロード</a>
+            して左のフォームに投げると、pandasの動きを確認することができます。
+        </p>
+
+        <h4 class="pb-1">how transform</h4>
+        <p class="mb-4" id="des">
+            {{ des }}
+        </p>
+        
+        <h4>code</h4>
+        
+        <pre>
+            <code id="code">
+{{ code }}
+            </code>
+        </pre>
+    </div>
+</div>
+
+<h2 class="my-4">Result</h2>
+<div class="row">
+    <div class="col-lg-5 col-12">
+        <h4>before</h4>
+        <table class='table table-hover table-responsive'>
+            <tr>
+                <th></th>
+                {% for header in post_data.columns %}   
+                    <th>
+                        {{ header }}
+                    </th>
+                {% endfor %}
+            </tr>
+            {% for dict in post_data.data  %} 
+                <tr>  
+                {% for data in dict  %}            
+                    <td>
+                        {{ data }}
+                    </td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-lg-7 col-12 ">
+        <h4>after</h4>
+        <table class='table table-hover table-responsive'>
+            <tr>
+                <th></th>
+                {% for header in transfmd_data.columns %}   
+                <th>
+                    {{ header }}
+                </th>
+                {% endfor %}
+            </tr>
+            
+            {% for dict in transfmd_data.data  %} 
+                <tr> 
+                {% for data in dict  %}
+                    {% ifequal forloop.counter0 0 %}
+                        <th>
+                            {{ data }}
+                        </th>
+                    {% else %}
+                        <td>
+                            {{ data }}
+                        </td>
+                    {% endifequal %}
+
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block extrajs %}
+<script>
+    // const explain = {
+    //     srt:{
+    //         des:"数量順で並び替え",
+    //         code:"df.sort_values(by=['amount'])"            
+    //     },
+    //     pvt:{
+    //         des:"ピボットテーブルをつくる",
+    //         code:"sas"            
+    //     },
+    // }
+    // 本来はフロント側でも変換方法の説明の制御が必要と思うが、割愛
+    $(function(){
+        const tt = $("#id_trasform_type")
+        // formで変換方法を選択する度に
+        tt.on("change",function(){
+            $("#des").empty();
+            $("#code").empty();
+            // if ( tt.val() == "srt"){
+            //     $("#des").html(explain.srt.des);
+            //     $("#code").html(explain.srt.code);
+            // }else if(tt.val() == "pvt"){
+            //     $("#des").html(explain.pvt.des);
+            //     $("#code").html(explain.pvt.code);
+            // }else{
+            //     $("#des").empty();
+            //     $("#code").empty();
+            // }
+        });
+    });
+</script>
+{% endblock %}

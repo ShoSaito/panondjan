@@ -1,0 +1,8 @@
+orderid,customer,product,amount,price,totalprice
+1,sakanaction, kohada, 2, 300, 600
+2,grapevine, ebi, 1, 500, 500 
+3,radiohead,chutoro, 10, 700, 7000
+4,radiohead, kohada, 7, 200, 1400
+5,LedZeppelin, chutoro, 23, 1000, 23000
+2,grapevine, tai, 5, 300, 1500
+

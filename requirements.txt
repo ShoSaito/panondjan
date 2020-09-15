@@ -1,2 +1,4 @@
 django
 pandas
+django-crispy-forms
+psycopg2 >= 2.5.4
